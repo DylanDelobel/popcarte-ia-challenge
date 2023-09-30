@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popcarte IA</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Roboto', sans-serif;
+            background: #000000;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            font-weight: 300;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            width: 600px;
+        }
+
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        p {
+            font-size: 1.5rem;
+        }
+
+        div {
+            margin-top: 30px;
+        }
+
+
+        /* SpaceX Brand Style Button */
+        .spacex-button {
+            background-color: #000;  /* Dark background */
+            color: #fff;  /* Light text */
+            border: 2px solid #fff;  /* Light border */
+            padding: 12px 20px;
+            font-family: 'Roboto', sans-serif;  /* Modern sans-serif font */
+            font-size: 16px;
+            font-weight: 500;  /* Medium weight for boldness */
+            text-transform: uppercase;  /* Uppercase text */
+            transition: all 0.3s ease;  /* Smooth transition for hover effects */
+            cursor: pointer;
+            margin: 20px;
+        }
+
+        /* Hover Effect */
+        .spacex-button:hover {
+            background-color: #fff;  /* Light background */
+            color: #000;  /* Dark text */
+            border: 2px solid #000;  /* Dark border */
+        }
+
+        .team {
+            display: flex;              /* establish flex container */
+            flex-direction: column;     /* stack flex items vertically */
+            justify-content: center;    /* center items vertically, in this case */
+            align-items: center;        /* center items horizontally, in this case */
+            flex: 1;
+            flex-basis: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<!-- Particle.js background -->
+<div id="particles-js"></div>
+<!-- Content container -->
+<div class="content">
+    <h1>Popcarte IA</h1>
+    <p>Exploring the possibilities</p>
+        <div class="team">
+            <p>
+                <a href="team1.html" class="spacex-button">Team #01</a>
+                <a href="team2.html" class="spacex-button">Team #02</a>
+            </p>
+            <p>
+                <a href="team3.html" class="spacex-button">Team #03</a>
+                <a href="team4.html" class="spacex-button">Team #04</a>
+            </p>
+            <p>
+                <a href="team5.html" class="spacex-button">Team #05</a>
+                <a href="team6.html" class="spacex-button">Team #06</a>
+            </p>
+            <p>
+                <a href="team7.html" class="spacex-button">Team #07</a>
+                <a href="team8.html" class="spacex-button">Team #08</a>
+            </p>
+            <p>
+                <a href="team9.html" class="spacex-button">Team #09</a>
+                <a href="team10.html" class="spacex-button">Team #10</a>
+            </p>
+            <p>
+                <a href="team11.html" class="spacex-button">Team #11</a>
+                <a href="team12.html" class="spacex-button">Team #12</a>
+            </p>
+            <p>
+                <a href="team13.html" class="spacex-button">Team #13</a>
+                <a href="team14.html" class="spacex-button">Team #14</a>
+            </p>
+        </div>
+</div>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    particlesJS("particles-js", {
+        particles: {
+            number: {
+                value: 120,
+                density: {
+                    enable: true,
+                    value_area: 800
+                }
+            },
+            color: {
+                value: "#ffffff"
+            },
+            shape: {
+                type: "star",
+                stroke: {
+                    width: 0,
+                    color: "#000000"
+                },
+                polygon: {
+                    nb_sides: 5
+                }
+            },
+            opacity: {
+                value: 0.6,
+                random: true,
+                anim: {
+                    enable: false,
+                    speed: 1,
+                    opacity_min: 0.1,
+                    sync: false
+                }
+            },
+            size: {
+                value: 4,
+                random: true,
+                anim: {
+                    enable: false,
+                    speed: 40,
+                    size_min: 0.1,
+                    sync: false
+                }
+            },
+            line_linked: {
+                enable: false,
+                distance: 150,
+                color: "#ffffff",
+                opacity: 0.4,
+                width: 1
+            },
+            move: {
+                enable: true,
+                speed: 2,
+                direction: "none",
+                random: true,
+                straight: false,
+                out_mode: "out",
+                bounce: false,
+                attract: {
+                    enable: false,
+                    rotateX: 600,
+                    rotateY: 1200
+                }
+            }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: {
+                onhover: {
+                    enable: true,
+                    mode: "grab"
+                },
+                onclick: {
+                    enable: false,
+                    mode: "push"
+                },
+                resize: true
+            },
+            modes: {
+                grab: {
+                    distance: 150,
+                    line_linked: {
+                        opacity: 0.2
+                    }
+                },
+                bubble: {
+                    distance: 400,
+                    size: 40,
+                    duration: 2,
+                    opacity: 8,
+                    speed: 3
+                },
+                repulse: {
+                    distance: 200
+                },
+                push: {
+                    particles_nb: 4
+                },
+                remove: {
+                    particles_nb: 2
+                }
+            }
+        },
+        retina_detect: true
+    });
+
+</script>
+</body>
+</html>

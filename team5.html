@@ -1,10 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT TeamMaker Pro</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 50px auto;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .teams {
+            text-align: left;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>ChatGPT TeamMaker Pro</h1>
+    <label for="participants">Noms des participants (séparés par des virgules) :</label>
+    <input type="text" id="participants" placeholder="Ex: John, Jane, Bob, Alice">
+    <label for="numTeams">Nombre d'équipes :</label>
+    <input type="number" id="numTeams" min="1" value="2">
+    <label for="themes">Choisissez un thème fun :</label>
+    <select id="themes">
+        <option value="Jeux de société">Jeux de société</option>
+        <option value="Sports d'équipe">Sports d'équipe</option>
+        <option value="Films d'action">Films d'action</option>
+        <option value="Cuisine internationale">Cuisine internationale</option>
+        <option value="Voyages exotiques">Voyages exotiques</option>
+        <option value="Musique préférée">Musique préférée</option>
+        <option value="Littérature favorite">Littérature favorite</option>
+        <option value="Passions créatives">Passions créatives</option>
+        <option value="Histoire fascinante">Histoire fascinante</option>
+        <option value="Scientifiques célèbres">Scientifiques célèbres</option>
+    </select>
+    <button onclick="createTeams()">Créer des équipes</button>
+    <div class="teams" id="teams"></div>
+</div>
 
+<script>
+    function getRandomTeamName(theme) {
+        const adjectives = ['Féroce', 'Légendaire', 'Intrépide', 'Aventurier', 'Épique', 'Éclatant', 'Astucieux', 'Mystérieux'];
+        const nouns = ['Dragons', 'Gladiateurs', 'Pirates', 'Explorateurs', 'Super-héros', 'Chevaliers', 'Voyageurs', 'Astronautes'];
+
+        const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+        const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+
+        return `${randomAdjective} ${randomNoun} ${theme}`;
+    }
+
+    function createTeams() {
+        const participantsInput = document.getElementById('participants');
+        const teamsContainer = document.getElementById('teams');
+        const numTeamsInput = document.getElementById('numTeams');
+        const themesSelect = document.getElementById('themes');
+
+        const participants = participantsInput.value.split(',').map(name => name.trim());
+        participants.sort(() => Math.random() - 0.5);
+
+        const numTeams = parseInt(numTeamsInput.value);
+        const teams = Array.from({ length: numTeams }, () => []);
+
+        participants.forEach((participant, index) => {
+            const teamIndex = index % numTeams;
+            teams[teamIndex].push(participant);
+        });
+
+        teamsContainer.innerHTML = '';
+        teams.forEach((team, index) => {
+            const teamElement = document.createElement('div');
+            const selectedTheme = themesSelect.options[themesSelect.selectedIndex].text;
+            const teamName = getRandomTeamName(selectedTheme);
+            teamElement.innerHTML = `<strong>${teamName} :</strong> ${team.join(', ')}`;
+            teamsContainer.appendChild(teamElement);
+        });
+    }
+</script>
 </body>
 </html>

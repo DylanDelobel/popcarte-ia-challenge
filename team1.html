@@ -2,9 +2,163 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Maker Pro</title>
+    <meta name="description" content="L'outil ultime pour des équipes efficaces en un instant !">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Styles de la palette de couleurs festive */
+        :root {
+            --primary-color: #FF5F3E;
+            --secondary-color: #FF8C69;
+            --text-color: #333;
+        }
+
+        body {
+            background-image: url('https://www.lamaisondubillard.com/modules/prestablog/views/img/grid-for-1-7/up-img/slide_32.jpg?796296bb36e9368d69906cd1784642de');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #FF432B;
+        }
+
+        /* Animation de cotillons */
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-200px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-color);
+            position: absolute;
+            animation: confetti 3s ease-out infinite;
+        }
+    </style>
 </head>
 <body>
+<div class="min-h-screen flex items-center justify-center">
+    <div class="max-w-md mx-auto p-8 form-container">
+        <h1 class="text-2xl font-semibold mb-2 text-primary-color">Team Maker Pro</h1>
+        <h2 class="text-lg mb-4 text-primary-color">L'outil ultime pour des équipes efficaces en un instant !</h2>
 
+        <form id="participantForm" class="mb-4">
+            <div class="mb-4">
+                <label for="participants" class="block text-sm font-medium text-gray-700">Liste des Participants (séparés par des virgules)</label>
+                <textarea id="participants" name="participants" class="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-400" required></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="numEquipes" class="block text-sm font-medium text-gray-700">Nombre d'Équipes</label>
+                <input type="number" id="numEquipes" name="numEquipes" class="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-400" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn-primary px-4 py-2 rounded hover:bg-primary-color focus:outline-none">Répartir</button>
+            </div>
+        </form>
+
+        <div id="equipes" class="hidden mt-4">
+            <!-- Les équipes seront affichées ici -->
+        </div>
+
+        <div id="recommencer" class="hidden mt-4 text-center">
+            <button id="recommencerBtn" class="btn-primary px-4 py-2 rounded hover:bg-primary-color focus:outline-none">Recommencer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fonction pour créer des cotillons
+    function createConfetti() {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.backgroundColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        document.body.appendChild(confetti);
+
+        // Supprimer le cotillon après l'animation
+        confetti.addEventListener('animationiteration', () => {
+            confetti.remove();
+        });
+    }
+
+    document.getElementById('participantForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const participants = document.getElementById('participants').value.split(',').map(participant => participant.trim());
+        const numEquipes = parseInt(document.getElementById('numEquipes').value);
+
+        const equipes = new Array(numEquipes).fill([]).map(() => []);
+
+        participants.forEach((participant, index) => {
+            const equipeIndex = index % numEquipes;
+            equipes[equipeIndex].push(participant);
+        });
+
+        const equipesContainer = document.getElementById('equipes');
+        equipesContainer.innerHTML = '';
+
+        equipes.forEach((equipe, index) => {
+            const equipeDiv = document.createElement('div');
+            equipeDiv.classList.add('mb-2');
+            equipeDiv.innerHTML = `<strong>Équipe ${index + 1}:</strong> ${equipe.join(', ')}`;
+            equipesContainer.appendChild(equipeDiv);
+        });
+
+        equipesContainer.classList.remove('hidden');
+        document.getElementById('participantForm').classList.add('hidden');
+        document.getElementById('recommencer').classList.remove('hidden');
+
+        // Créer des cotillons colorés à l'affichage des équipes
+        for (let i = 0; i < 50; i++) {
+            createConfetti();
+        }
+
+        // Ajouter le GIF après l'affichage des équipes
+        const gifContainer = document.createElement('div');
+        gifContainer.classList.add('tenor-gif-embed');
+        gifContainer.setAttribute('data-postid', '13543499');
+        gifContainer.setAttribute('data-share-method', 'host');
+        gifContainer.setAttribute('data-aspect-ratio', '1.0873');
+        gifContainer.setAttribute('data-width', '100%');
+        gifContainer.innerHTML = '<a href="https://tenor.com/view/magical-magic-gif-13543499">Magical GIF</a>from <a href="https://tenor.com/search/magical-gifs">Magical GIFs</a>';
+
+        const scriptElement = document.createElement('script');
+        scriptElement.setAttribute('type', 'text/javascript');
+        scriptElement.setAttribute('async', 'true');
+        scriptElement.setAttribute('src', 'https://tenor.com/embed.js');
+
+        equipesContainer.appendChild(gifContainer);
+        equipesContainer.appendChild(scriptElement);
+    });
+
+    // Ajouter la fonctionnalité pour recommencer
+    document.getElementById('recommencerBtn').addEventListener('click', function () {
+        document.getElementById('participantForm').reset();
+        document.getElementById('equipes').classList.add('hidden');
+        document.getElementById('participantForm').classList.remove('hidden');
+        document.getElementById('recommencer').classList.add('hidden');
+    });
+</script>
 </body>
 </html>

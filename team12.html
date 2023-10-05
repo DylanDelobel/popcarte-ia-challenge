@@ -2,9 +2,226 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'équipes Karaoké des années 80</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #ff69b4;
+            text-align: center;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-container label {
+            width: 40%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .input-container input[type="text"],
+        .input-container input[type="number"] {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-container button {
+            background-color: #ff69b4;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-container button:hover {
+            background-color: #ff1493;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        #add-player {
+            background-color: #ff69b4;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #add-player:hover {
+            background-color: #ff1493;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>Générateur d'équipes Karaoké des années 80</h1>
 
+    <div class="input-container">
+        <label for="player-name">Ajouter un participant :</label>
+        <input type="text" id="player-name" placeholder="Nom et prénom du participant" required>
+        <button type="button" id="add-player">Ajouter</button>
+    </div>
+
+    <h2>Participants :</h2>
+    <ul id="participants-list"></ul>
+
+    <div class="input-container">
+        <label for="team-size">Nombre de participants par équipe :</label>
+        <input type="number" id="team-size" required>
+    </div>
+
+    <div class="btn-container">
+        <button type="button" id="generate-teams">Générer des équipes</button>
+    </div>
+
+    <div id="teams-container">
+        <!-- Les équipes générées seront affichées ici -->
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const playerNameInput = document.getElementById("player-name");
+            const addPlayerButton = document.getElementById("add-player");
+            const participantsList = document.getElementById("participants-list");
+            const teamSizeInput = document.getElementById("team-size");
+            const generateButton = document.getElementById("generate-teams");
+            const teamsContainer = document.getElementById("teams-container");
+
+            // Liste pour stocker les participants
+            const participants = [];
+
+            // Écouteur d'événement pour le bouton "Ajouter"
+            addPlayerButton.addEventListener("click", addParticipant);
+
+            // Fonction pour ajouter un participant
+            function addParticipant() {
+                const participantName = playerNameInput.value.trim();
+                if (participantName !== "") {
+                    // Ajouter le participant à la liste
+                    participants.push(participantName);
+                    // Mettre à jour l'affichage de la liste des participants
+                    participantsList.innerHTML += `<li>${participantName}</li>`;
+                    // Effacer le champ de saisie
+                    playerNameInput.value = "";
+                }
+            }
+
+            // Écouteur d'événement pour le bouton "Générer des équipes"
+            generateButton.addEventListener("click", generateTeams);
+
+            // Fonction pour générer les équipes avec des noms aléatoires basés sur les années 80
+            function generateTeams() {
+                const teamSize = parseInt(teamSizeInput.value);
+
+                // Vérifier si le nombre de participants par équipe est valide
+                if (teamSize <= 0 || teamSize > participants.length) {
+                    alert("Le nombre de participants par équipe n'est pas valide.");
+                    return;
+                }
+
+                // Mélanger les participants (facultatif : pour plus d'aléatoire)
+                const shuffledParticipants = shuffleArray(participants.slice());
+
+                // Diviser les participants en équipes
+                const teams = [];
+                for (let i = 0; i < shuffledParticipants.length; i += teamSize) {
+                    const team = shuffledParticipants.slice(i, i + teamSize);
+                    teams.push(team);
+                }
+
+                // Fonction pour générer un nom d'équipe aléatoire basé sur les années 80
+                function generateRandomTeamName() {
+                    const adjectives = [
+                        "Funky",
+                        "Groovy",
+                        "Radical",
+                        "Electric",
+                        "Awesome",
+                        "Flashback",
+                        "Rockin'",
+                        "Retro",
+                        "Disco",
+                        "Synth",
+                    ];
+
+                    const nouns = [
+                        "Legends",
+                        "Tunes",
+                        "Rockstars",
+                        "Heroes",
+                        "Dancefloor",
+                        "Boombox",
+                        "Vinyl",
+                        "Neon",
+                        "Jam",
+                        "Memories",
+                    ];
+
+                    const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+                    const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+
+                    return `${randomAdjective} ${randomNoun}`;
+                }
+
+                // Afficher les équipes générées avec des noms aléatoires basés sur les années 80
+                teamsContainer.innerHTML = "";
+                teams.forEach((team, index) => {
+                    const teamName = generateRandomTeamName();
+                    const teamList = document.createElement("ul");
+                    teamList.innerHTML = `<h3>${teamName}</h3>`;
+                    team.forEach((participant) => {
+                        teamList.innerHTML += `<li>${participant}</li>`;
+                    });
+                    teamsContainer.appendChild(teamList);
+                });
+            }
+
+            // Fonction pour mélanger un tableau (Fisher-Yates shuffle)
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+        });
+    </script>
+</div>
 </body>
 </html>

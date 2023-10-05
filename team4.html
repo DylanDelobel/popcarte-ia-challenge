@@ -1,10 +1,205 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
+
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Equipe parfaite pour un concours de cookie</title>
+
+    <style>
+
+        body {
+
+            font-family: 'Arial', sans-serif;
+
+            background-color: #4CAF50;
+
+            color: white;
+
+            text-align: center;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            height: 100vh;
+
+            margin: 0;
+
+        }
+
+
+
+        .container {
+
+            margin-top: 20px;
+
+        }
+
+
+
+        .team {
+
+            margin-bottom: 40px;
+
+        }
+
+
+
+        .team-title {
+
+            font-size: 24px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+
+        .team-members {
+
+            font-size: 18px;
+
+        }
+
+
+
+        .food-icon {
+
+            width: 50px;
+
+            height: 50px;
+
+            margin-right: 10px;
+
+        }
+
+    </style>
+
 </head>
+
+
+
 <body>
 
+<div class="container">
+
+    <h1>Equipe pour un concours de cookie</h1>
+
+    <label for="participants">Noms des Participants (séparés par des virgules) :</label>
+
+    <input type="text" id="participants" placeholder="Entrez les noms des participants">
+
+    <button onclick="formerEquipes()">Former les Équipes</button>
+
+
+
+    <div id="equipes" class="team"></div>
+
+</div>
+
+
+
+<script>
+
+    function formerEquipes() {
+
+        var participantsInput = document.getElementById("participants").value;
+
+        var participants = participantsInput.split(",").map(function (participant) {
+
+            return participant.trim();
+
+        });
+
+
+
+        var equipes = [];
+
+
+
+        while (participants.length > 0) {
+
+            var equipe = participants.splice(0, 5);
+
+            equipes.push(equipe);
+
+        }
+
+
+
+        afficherEquipes(equipes);
+
+    }
+
+
+
+    function afficherEquipes(equipes) {
+
+        var equipeContainer = document.getElementById("equipes");
+
+        equipeContainer.innerHTML = '';
+
+
+
+        for (var i = 0; i < equipes.length; i++) {
+
+            var equipeDiv = document.createElement("div");
+
+            equipeDiv.classList.add("team");
+
+
+
+            var equipeTitre = document.createElement("div");
+
+            equipeTitre.classList.add("team-title");
+
+            equipeTitre.textContent = "Équipe " + (i + 1);
+
+            equipeDiv.appendChild(equipeTitre);
+
+
+
+            var membresEquipe = document.createElement("div");
+
+            membresEquipe.classList.add("team-members");
+
+            membresEquipe.textContent = equipes[i].join(", ");
+
+            equipeDiv.appendChild(membresEquipe);
+
+
+
+            var foodIcon = document.createElement("img");
+
+            foodIcon.src = "https://img.freepik.com/vecteurs-premium/biscuit-dessin-anime-drole-icone-nourriture-sucree-illustration-vectorielle_444196-5551.jpg?w=2000";
+
+            foodIcon.classList.add("food-icon");
+
+            equipeDiv.appendChild(foodIcon);
+
+
+
+            equipeContainer.appendChild(equipeDiv);
+
+        }
+
+    }
+
+</script>
+
 </body>
+
+
+
 </html>

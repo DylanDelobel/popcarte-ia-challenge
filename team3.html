@@ -1,10 +1,150 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Droit dans le mille</title>
+    <style>
+        body {
+            background-color: #FFDCF2;
+            text-align: center;
+            font-family: 'DMSans', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .banner {
+            max-height: 300px;
+            width: 100%;
+            object-fit: cover;
+        }
+        h1 {
+            font-size: 40pt;
+            margin-top: 20px;
+            color: #00694B;
+        }
+        p.intro {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #00694B;
+        }
+        label {
+            display: block;
+            margin-bottom: 15px;
+        }
+        input, select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 15px;
+            font-family: 'DMSans', sans-serif;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00694B;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 20px;
+            font-family: 'DMSans', sans-serif;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #005631;
+        }
+        #equipesFormees {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .equipe {
+            background-color: #00694B;
+            color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .equipe h2 {
+            font-size: 18px;
+            margin-top: 0;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-
+<div class="container">
+    <img class="banner" src="https://images.pexels.com/photos/8762615/pexels-photo-8762615.jpeg?auto=compress&cs=tinysrgb&w=1600" alt="Bannière">
+    <h1>Droit dans le mille</h1>
+    <p class="intro">Un formulaire de formation d'équipe pour des tournois de fléchettes en entreprise.</p>
+    <label for="participants">Noms des participants (séparés par des virgules) :</label>
+    <input type="text" id="participants" placeholder="Entrez les noms des participants">
+    <label for="nombreEquipes">Nombre d'équipes souhaité (max. 15) :</label>
+    <input type="number" id="nombreEquipes" placeholder="Entrez le nombre d'équipes" max="15">
+    <button id="createTeams">Créer des équipes</button>
+    <div id="equipesFormees">
+        <!-- L'espace pour afficher les équipes formées sera mis à jour en JavaScript -->
+    </div>
+</div>
+<script>
+    // JavaScript pour la formation d'équipes
+    document.getElementById("createTeams").addEventListener("click", function() {
+        const participantsInput = document.getElementById("participants");
+        const participants = participantsInput.value.split(",").map(name => name.trim());
+        const nombreEquipesInput = document.getElementById("nombreEquipes");
+        const nombreEquipes = parseInt(nombreEquipesInput.value);
+        if (isNaN(nombreEquipes) || nombreEquipes <= 0) {
+            alert("Veuillez entrer un nombre d'équipes valide.");
+            return;
+        }
+        if (nombreEquipes > 15) {
+            alert("Le nombre maximum d'équipes est de 15.");
+            return;
+        }
+        // Répartir les joueurs de manière équitable dans les équipes
+        const equipes = [];
+        for (let i = 0; i < nombreEquipes; i++) {
+            equipes.push([]);
+        }
+        participants.sort(() => Math.random() - 0.5);
+        participants.forEach((participant, index) => {
+            const equipeIndex = index % nombreEquipes;
+            equipes[equipeIndex].push(participant);
+        });
+        // Afficher les équipes formées dans la div "equipesFormees"
+        const equipesFormees = document.getElementById("equipesFormees");
+        equipesFormees.innerHTML = "";
+        const nomsEquipes = [
+            "Les Fléchettes Féroces",
+            "Les As de la Cible",
+            "Les Lanceurs de Précision",
+            "Les Bulls-eye Blasters",
+            "Les Fléchettes Volantes",
+            "Les Maîtres de la Cible",
+            "Les Tireurs d'Élite",
+            "Les Visées Impeccables",
+            "Les Champions des Fléchettes",
+            "Les Pro du Dard",
+            "Les Précis Décocheurs",
+            "Les Experts de la Cible",
+            "Les Tireurs de Classe",
+            "Les Précisionneurs",
+            "Les Darts Invincibles"
+        ];
+        equipes.forEach((equipe, index) => {
+            const equipeDiv = document.createElement("div");
+            equipeDiv.classList.add("equipe");
+            equipeDiv.innerHTML = `<h2>${nomsEquipes[index]}</h2>`;
+            equipeDiv.innerHTML += `<p>Membres : ${equipe.join(", ")}</p>`;
+            equipesFormees.appendChild(equipeDiv);
+        });
+        // Vérifier si des équipes ont moins de 2 membres et afficher un message d'alerte
+        const equipesIncompletes = equipes.filter(equipe => equipe.length < 2);
+        if (equipesIncompletes.length > 0) {
+            alert("Attention, certaines équipes ont moins de 2 membres. Vous pouvez créer moins d'équipes ou ajouter plus de participants.");
+        }
+    });
+</script>
 </body>
 </html>

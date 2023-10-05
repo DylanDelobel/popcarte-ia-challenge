@@ -1,10 +1,427 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Title</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TeamMaker Pro - Tournoi de Bière-Pong</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            margin: 20px;
+
+            background-color: #F7E8DB; /* Beige */
+
+        }
+
+
+
+        h1 {
+
+            color: #121D54; /* Bleu marine */
+
+        }
+
+
+
+        h2 {
+
+            color: #00694B; /* Vert bouteille */
+
+        }
+
+
+
+        #playerList {
+
+            margin-bottom: 20px;
+
+            background-color: #FFDCF2; /* Rose pale */
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+        }
+
+
+
+        #teamList {
+
+            margin-top: 20px;
+
+            background-color: #DCF0DD; /* Mint */
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+        }
+
+
+
+        #tournamentTree {
+
+            margin-top: 20px;
+
+            background-color: #FFF79C; /* Jaune */
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+        }
+
+
+
+        ul {
+
+            list-style-type: none;
+
+            padding: 0;
+
+        }
+
+
+
+        li {
+
+            margin-bottom: 8px;
+
+            font-size: 16px;
+
+        }
+
+
+
+        input, button {
+
+            font-size: 16px;
+
+            padding: 8px;
+
+            margin-right: 8px;
+
+        }
+
+
+
+        button {
+
+            background-color: #FF5F3E; /* Orange */
+
+            color: white;
+
+            border: none;
+
+            border-radius: 4px;
+
+            cursor: pointer;
+
+        }
+
+
+
+        input {
+
+            border: 1px solid #121D54; /* Bleu marine */
+
+            border-radius: 4px;
+
+        }
+
+    </style>
+
 </head>
+
 <body>
 
+<h1>TeamMaker Pro - Tournoi de Bière-Pong</h1>
+
+
+
+<div id="playerList">
+
+    <h2>Liste des Joueurs</h2>
+
+    <ul id="players"></ul>
+
+    <input type="text" id="playerName" placeholder="Nom du Joueur" onkeydown="handleKeyDown(event)">
+
+    <button onclick="addPlayer()">Ajouter Joueur</button>
+
+</div>
+
+
+
+<div id="teamList">
+
+    <h2>Équipes</h2>
+
+    <label for="numPlayers">Nombre de Joueurs par Équipe:</label>
+
+    <input type="number" id="numPlayers" min="1" value="2">
+
+    <ul id="teams"></ul>
+
+    <button onclick="generateTeams()">Générer Équipes</button>
+
+</div>
+
+
+
+<div id="tournamentTree">
+
+    <h2>Arbre de Tournoi</h2>
+
+    <ul id="tree"></ul>
+
+    <button onclick="generateTournamentTree()">Générer Arbre de Tournoi</button>
+
+</div>
+
+
+
+<script>
+
+    let players = [];
+
+    let teamNames = [];
+
+    let numPlayersPerTeam = 2;
+
+
+
+    function addPlayer() {
+
+        const playerNameInput = document.getElementById('playerName');
+
+        const playerName = playerNameInput.value.trim();
+
+
+
+        if (playerName !== '') {
+
+            players.push(playerName);
+
+            playerNameInput.value = '';
+
+            updatePlayerList();
+
+        }
+
+    }
+
+
+
+    function updatePlayerList() {
+
+        const playersList = document.getElementById('players');
+
+        playersList.innerHTML = '';
+
+
+
+        players.forEach(player => {
+
+            const li = document.createElement('li');
+
+            li.textContent = player;
+
+            playersList.appendChild(li);
+
+        });
+
+    }
+
+
+
+    function generateTeams() {
+
+        const teamList = document.getElementById('teams');
+
+        teamList.innerHTML = '';
+
+
+
+        if (players.length < numPlayersPerTeam) {
+
+            alert('Il doit y avoir au moins autant de joueurs que le nombre de joueurs par équipe.');
+
+            return;
+
+        }
+
+
+
+        // Mélanger la liste des joueurs de manière aléatoire
+
+        players = shuffleArray(players);
+
+
+
+        // Diviser les joueurs en équipes avec des noms amusants
+
+        const numTeams = Math.floor(players.length / numPlayersPerTeam);
+
+        const funnyTeamNames = [
+
+            "Les Ninjas de la Bière",
+
+            "Les Maîtres de la Mousse",
+
+            "Les Gladiateurs du Houblon",
+
+            "Les Champions du Baril"
+
+        ];
+
+
+
+        for (let i = 0; i < numTeams; i++) {
+
+            const team = players.slice(i * numPlayersPerTeam, (i + 1) * numPlayersPerTeam);
+
+            const teamName = funnyTeamNames[i] || `Équipe ${i + 1}`;
+
+            displayTeam(team, teamName);
+
+            teamNames.push(teamName);
+
+        }
+
+    }
+
+
+
+    function displayTeam(team, teamName) {
+
+        const teamList = document.getElementById('teams');
+
+        const li = document.createElement('li');
+
+        li.textContent = `${teamName}: ${team.join(', ')}`;
+
+        teamList.appendChild(li);
+
+    }
+
+
+
+    function generateTournamentTree() {
+
+        const treeList = document.getElementById('tree');
+
+        treeList.innerHTML = '';
+
+
+
+        if (teamNames.length < 2) {
+
+            alert('Il doit y avoir au moins deux équipes pour créer un arbre de tournoi.');
+
+            return;
+
+        }
+
+
+
+        const numRounds = Math.ceil(Math.log2(teamNames.length));
+
+        let currentRoundTeams = teamNames.slice();
+
+
+
+        for (let round = 1; round <= numRounds; round++) {
+
+            const nextRoundTeams = [];
+
+            const roundName = `Round ${round}`;
+
+
+
+            for (let i = 0; i < currentRoundTeams.length; i += 2) {
+
+                const matchTeams = [currentRoundTeams[i], currentRoundTeams[i + 1]];
+
+
+
+                // Ajout de la condition pour n'afficher que le Round 1
+
+                if (round === 1) {
+
+                    displayMatch(matchTeams, roundName);
+
+                }
+
+
+
+                const winner = Math.random() < 0.5 ? matchTeams[0] : matchTeams[1];
+
+                nextRoundTeams.push(winner);
+
+            }
+
+
+
+            currentRoundTeams = nextRoundTeams;
+
+        }
+
+    }
+
+
+
+    function displayMatch(teams, roundName) {
+
+        const treeList = document.getElementById('tree');
+
+        const li = document.createElement('li');
+
+        li.textContent = `${roundName}: ${teams[0]} vs ${teams[1]}`;
+
+        treeList.appendChild(li);
+
+    }
+
+
+
+    function shuffleArray(array) {
+
+        for (let i = array.length - 1; i > 0; i--) {
+
+            const j = Math.floor(Math.random() * (i + 1));
+
+            [array[i], array[j]] = [array[j], array[i]];
+
+        }
+
+        return array;
+
+    }
+
+
+
+    function handleKeyDown(event) {
+
+        if (event.key === 'Enter') {
+
+            addPlayer();
+
+        }
+
+    }
+
+</script>
+
 </body>
+
 </html>

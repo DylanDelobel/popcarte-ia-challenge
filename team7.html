@@ -2,9 +2,235 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Faites apparaître la magie en créant des équipes !">
+    <title>ChatGPT TeamMaker Pro</title>
+    <style>
+        body {
+            background-color: #DCF0DD;
+            color: #121D54;
+            font-family: 'cursive', sans-serif; /* Utilisation de la police 'cursive' */
+        }
+
+        h1 {
+            color: #121D54;
+        }
+
+        label {
+            color: #121D54;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 5px;
+            margin: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #121D54;
+            color: #DCF0DD;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #002855;
+        }
+
+        #participantsContainer {
+            margin: 10px;
+        }
+
+        .participant {
+            margin-bottom: 10px;
+        }
+
+        .equipe {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #themeContainer {
+            margin-top: 20px;
+        }
+
+        #countdown {
+            font-size: 24px;
+        }
+    </style>
 </head>
 <body>
+<h1>Faites apparaître la magie en créant des équipes !</h1>
 
+<label for="nbEquipes">Nombre d'équipes :</label>
+<input type="number" id="nbEquipes" min="1" value="2" />
+
+<div id="participantsContainer">
+    <h2>Noms des participants :</h2>
+    <div class="participant">
+        <label for="participant1">Participant 1 :</label>
+        <input type="text" id="participant1" placeholder="Saisissez le nom du participant" />
+    </div>
+</div>
+
+<button id="ajouterParticipant">Ajouter un participant</button>
+<button id="creerEquipes">Créer des équipes</button>
+<button id="melangerEquipes" style="display: none;">Mélanger les équipes</button>
+
+<div id="equipes"></div>
+<div id="countdown"></div>
+
+<audio id="music" src="chemin/vers/musique-de-cirque.mp3" preload="auto"></audio>
+
+<button id="telechargerEquipes" style="display: none;">Télécharger les équipes</button>
+
+<script>
+    const participantsArray = [];
+    let participantIndex = 2;
+    let equipes = [];
+    let nomsFarfelus = [
+        'Les Cascadeurs Fous',
+        'Les Clowns Acrobatiques',
+        'Les Jongleurs Étoilés',
+        'Les Équilibristes Intrépides',
+        'Les Dompteurs de Tigres',
+        'Les Magiciens Merveilleux'
+    ];
+
+    document.getElementById('ajouterParticipant').addEventListener('click', function() {
+        const participantsContainer = document.getElementById('participantsContainer');
+        const participantDiv = document.createElement('div');
+        participantDiv.classList.add('participant');
+        participantDiv.innerHTML = `
+                <label for="participant${participantIndex}">Participant ${participantIndex} :</label>
+                <input type="text" id="participant${participantIndex}" placeholder="Saisissez le nom du participant" />
+            `;
+        participantsContainer.appendChild(participantDiv);
+        participantIndex++;
+    });
+
+    document.getElementById('creerEquipes').addEventListener('click', function() {
+        // Récupérer le nombre d'équipes depuis le champ de saisie
+        const nbEquipesInput = document.getElementById('nbEquipes');
+        const nbEquipes = parseInt(nbEquipesInput.value);
+
+        // Réinitialiser la liste des participants et les équipes
+        participantsArray.length = 0;
+        equipes.length = 0;
+
+        // Récupérer les noms des participants depuis les champs de saisie
+        for (let i = 1; i < participantIndex; i++) {
+            const participantInput = document.getElementById(`participant${i}`);
+            const participantName = participantInput.value.trim();
+            if (participantName) {
+                participantsArray.push(participantName);
+            }
+        }
+
+        // Répartir les participants en équipes
+        for (let i = 0; i < nbEquipes; i++) {
+            equipes.push([]);
+        }
+
+        let equipeIndex = 0;
+        participantsArray.forEach(participant => {
+            equipes[equipeIndex].push(participant);
+            equipeIndex = (equipeIndex + 1) % nbEquipes;
+        });
+
+        // Lancer la musique de cirque
+        const music = document.getElementById('music');
+        music.play();
+
+        // Afficher le compte à rebours
+        afficherCompteARebours();
+
+        // Cacher les boutons de création et mélange d'équipes
+        const creerEquipesButton = document.getElementById('creerEquipes');
+        creerEquipesButton.style.display = 'none';
+
+        const melangerEquipesButton = document.getElementById('melangerEquipes');
+        melangerEquipesButton.style.display = 'none';
+    });
+
+    function afficherCompteARebours() {
+        const countdownDiv = document.getElementById('countdown');
+        let countdownValue = 5;
+
+        const countdownInterval = setInterval(() => {
+            if (countdownValue > 0) {
+                countdownDiv.innerText = countdownValue;
+                countdownValue--;
+            } else {
+                clearInterval(countdownInterval);
+                countdownDiv.innerText = '';
+                // Afficher les équipes
+                afficherEquipes(equipes);
+            }
+        }, 1000);
+    }
+
+    document.getElementById('melangerEquipes').addEventListener('click', function() {
+        // Mélanger à nouveau les équipes
+        melangerEquipes(equipes);
+
+        // Afficher les équipes mises à jour
+        afficherEquipes(equipes);
+    });
+
+    function melangerEquipes(equipes) {
+        for (let i = 0; i < equipes.length; i++) {
+            equipes[i] = [];
+        }
+
+        participantsArray.forEach(participant => {
+            const randomIndex = Math.floor(Math.random() * equipes.length);
+            equipes[randomIndex].push(participant);
+        });
+    }
+
+    function afficherEquipes(equipes) {
+        // Afficher les équipes côte à côte
+        const equipesDiv = document.getElementById('equipes');
+        equipesDiv.innerHTML = '';
+
+        equipes.forEach((equipe, index) => {
+            const equipeElement = document.createElement('div');
+            equipeElement.classList.add('equipe');
+            const nomEquipe = nomsFarfelus[index % nomsFarfelus.length];
+            equipeElement.innerHTML = `
+                    <h3>${nomEquipe}</h3>
+                    <p>${equipe.join(', ')}</p>
+                `;
+            equipesDiv.appendChild(equipeElement);
+        });
+
+        // Afficher les boutons "Télécharger les équipes" et "Mélanger les équipes"
+        const telechargerEquipesButton = document.getElementById('telechargerEquipes');
+        telechargerEquipesButton.style.display = 'block';
+
+        const melangerEquipesButton = document.getElementById('melangerEquipes');
+        melangerEquipesButton.style.display = 'block';
+    }
+
+    function telechargerEquipesCSV(equipes) {
+        const csvContent = "data:text/csv;charset=utf-8," + equipes.map((equipe, index) => {
+            const nomEquipe = nomsFarfelus[index % nomsFarfelus.length];
+            return [`Équipe ${nomEquipe}`, ...equipe].join('\n');
+        }).join('\n\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "equipes.csv");
+        document.body.appendChild(link);
+        link.click();
+    }
+</script>
 </body>
 </html>

@@ -1,10 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les équipes pousse-pousse pour le Pop-arrosage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #3b3a36;
+            padding: 20px;
+            text-align: center;
+        }
+        h1, h3 {
+            color: #76a665;
+        }
+        h1 {
+            font-size: 28px;
+        }
+        button {
+            background-color: #76a665;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6b9460;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        div {
+            margin-bottom: 20px;
+        }
+        input, select {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
+<h1>Les équipes pousse-pousse pour le Pop-arrosage</h1>
 
+<label for="numParticipants">Nombre de participants :</label>
+<input type="number" id="numParticipants" min="1">
+<button onclick="generateInputs()">Valider le nombre de participants</button>
+
+<div id="participantsList"></div>
+
+<button onclick="addParticipant()">Ajouter un participant</button>
+<button onclick="createTeams()">Créer les équipes</button>
+
+<h2>Équipes</h2>
+<div id="teams"></div>
+<button onclick="createTeams()">Redistribuer les équipes</button>
+
+<script>
+    function generateInputs() {
+        const num = document.getElementById('numParticipants').value;
+        const listDiv = document.getElementById('participantsList');
+        listDiv.innerHTML = '';
+
+        for(let i=0; i<num; i++) {
+            addParticipant();
+        }
+    }
+
+    function addParticipant() {
+        const listDiv = document.getElementById('participantsList');
+
+        const newDiv = document.createElement('div');
+        newDiv.innerHTML = `
+                <label>Prénom: </label>
+                <input type="text" name="participantName[]">
+                <label>Main verte: </label>
+                <select name="greenThumb[]">
+                    <option value="oui">Oui</option>
+                    <option value="non">Non</option>
+                </select>
+            `;
+        listDiv.appendChild(newDiv);
+    }
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function createTeams() {
+        const participants = document.querySelectorAll('#participantsList div');
+        const teamsDiv = document.getElementById('teams');
+        teamsDiv.innerHTML = '';
+
+        const participantsArray = Array.from(participants);
+        shuffle(participantsArray);
+
+        let teams = [];
+        let team = [];
+        let greenThumbIndex = -1;
+
+        participantsArray.forEach((participantDiv, index) => {
+            const name = participantDiv.querySelector('input').value;
+            const greenThumb = participantDiv.querySelector('select').value === 'oui';
+            if (greenThumb && greenThumbIndex === -1) {
+                greenThumbIndex = team.length;
+            }
+
+            team.push({name, greenThumb});
+
+            if(team.length === 3) {
+                teams.push(team);
+                team = [];
+                greenThumbIndex = -1;
+            }
+        });
+
+        if (team.length > 0) {
+            if (teams.length === 0) {
+                teams.push(team);
+            } else {
+                team.forEach((extraParticipant, i) => {
+                    const targetTeam = teams[i % teams.length];
+                    targetTeam.push(extraParticipant);
+                });
+            }
+        }
+
+        const teamNames = [
+            "Les Tuyaux Rigolos", "Les Pulvérisateurs de Plaisir", "L'Équipe H2O-larious",
+            "Les Lanceurs d'Eau Farfelus", "Les Jardiniers Aquatiques", "Les Éclaboussures Joyeuses",
+            "Les Irrigateurs Insouciants", "Les Aspergeurs Fous", "Les Cascadeurs d'Arrosage",
+            "Les Gouttelettes Comiques"
+        ];
+        shuffle(teamNames);
+
+        for(let i = 0; i < 52; i++) {
+            const weekTeam = teams[i % teams.length];
+            const teamName = teamNames[i % teamNames.length];
+            const teamDiv = document.createElement('div');
+            teamDiv.innerHTML = `
+                    <h3>Semaine ${i + 1}: ${teamName}</h3>
+                    <ul>
+                        ${weekTeam.map(p => `<li>${p.name} (${p.greenThumb ? "Main verte" : "Pas de main verte"})</li>`).join('')}
+                    </ul>
+                `;
+            teamsDiv.appendChild(teamDiv);
+        }
+    }
+</script>
 </body>
 </html>

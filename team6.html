@@ -1,10 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamUp - Formation d'Équipes</title>
+    <style>
+        /* ... (les styles CSS) ... */
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1 style="color:#ff3366;">TeamUp - Formation d'Équipes</h1>
 
+    <div id="ajoutJoueurs" style="margin-bottom: 20px;">
+        <label for="nomJoueur" style="font-size: 18px;">Ajouter des Joueurs</label>
+        <div style="display: flex; align-items: center;">
+            <input type="text" id="nomJoueur" placeholder="Entrez le nom d'un joueur" style="flex-grow: 1; padding: 8px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
+            <button onclick="ajouterJoueur()" style="padding: 8px 16px; font-size: 16px; margin-left: 10px; background-color: #ff3366; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Ajouter</button>
+        </div>
+    </div>
+
+    <div id="joueurs" style="margin-bottom: 20px;">
+        <!-- Ici seront ajoutés les joueurs -->
+    </div>
+
+    <button onclick="formerEquipes()" style="padding: 12px 24px; background-color: #ff3366; color: #fff; border: none; cursor: pointer; border-radius: 5px; font-size: 16px;">Créer des équipes</button>
+
+    <div id="equipes"></div>
+
+    <div id="gage" style="margin-top: 20px;"></div>
+
+    <div id="suggestionsJeux" style="margin-top: 20px;"></div>
+</div>
+
+<script>
+    function ajouterJoueur() {
+        const nomJoueurInput = document.getElementById('nomJoueur');
+        const nomJoueur = nomJoueurInput.value.trim();
+
+        if (nomJoueur !== '') {
+            const joueursDiv = document.getElementById('joueurs');
+            const joueurDiv = document.createElement('div');
+            joueurDiv.classList.add('joueur');
+            joueurDiv.style.padding = '8px';
+            joueurDiv.style.fontSize = '16px';
+            joueurDiv.textContent = nomJoueur;
+            joueursDiv.appendChild(joueurDiv);
+            nomJoueurInput.value = '';
+        }
+    }
+
+    function suggererJeux(nombreJoueurs) {
+        let suggestions = [];
+
+        switch (nombreJoueurs) {
+            case 4:
+                suggestions.push("Pictionary en équipes de deux.");
+                suggestions.push("Charades en équipes.");
+                suggestions.push("Un tournoi de Tic Tac Toe géant.");
+                break;
+            case 6:
+                suggestions.push("Cache-cache en équipes de trois.");
+                suggestions.push("Une course à trois pattes.");
+                suggestions.push("Un tournoi de mini-golf.");
+                break;
+            case 8:
+                suggestions.push("Un match de volleyball.");
+                suggestions.push("Un tournoi de Mario Kart.");
+                suggestions.push("Un jeu de société en équipes.");
+                break;
+            case 10:
+                suggestions.push("Une chasse au trésor en équipes.");
+                suggestions.push("Un tournoi de football en salle.");
+                suggestions.push("Un karaoké en groupe.");
+                break;
+            default:
+                suggestions.push("Organisez un tournoi avec vos jeux préférés !");
+                suggestions.push("Faites une compétition amicale dans un sport que vous aimez.");
+                suggestions.push("Essayez un jeu de société que tout le monde apprécie.");
+                break;
+        }
+
+        return suggestions;
+    }
+
+    function formerEquipes() {
+        const joueursDiv = document.getElementById('joueurs');
+        const equipesDiv = document.getElementById('equipes');
+        const gageDiv = document.getElementById('gage');
+        const suggestionsJeuxDiv = document.getElementById('suggestionsJeux');
+        equipesDiv.innerHTML = '';
+        gageDiv.innerHTML = '';
+        suggestionsJeuxDiv.innerHTML = '';
+
+        const joueurs = Array.from(joueursDiv.children).map(joueurDiv => joueurDiv.textContent);
+
+        if (joueurs.length < 2) {
+            alert('Ajoutez au moins deux joueurs pour former des équipes.');
+            return;
+        }
+
+        const nombreEquipes = Math.ceil(joueurs.length / 2);
+        const equipes = Array.from({ length: nombreEquipes }, () => []);
+
+        const nomsEquipesFuns = [
+            "Les Super-Héros",
+            "Les Maîtres du Désordre",
+            "Les Génies du Chaos",
+            "Les Champions de la Chance",
+            "Les Ninjas de la Nuit",
+            "Les Superstars de la Joie"
+        ];
+
+        // Vérifier que chaque joueur ne soit pas dans deux équipes différentes
+        const joueursUniques = [...new Set(joueurs)];
+
+        if (joueursUniques.length !== joueurs.length) {
+            alert('Un joueur ne peut pas être dans deux équipes différentes.');
+            return;
+        }
+
+        joueurs.forEach((joueur, index) => {
+            const equipeIndex = index % nombreEquipes;
+            equipes[equipeIndex].push(joueur);
+        });
+
+        equipes.forEach((equipe, index) => {
+            const equipeDiv = document.createElement('div');
+            equipeDiv.classList.add('team');
+            equipeDiv.style.fontSize = '18px';
+            equipeDiv.style.marginBottom = '10px';
+            equipeDiv.style.padding = '10px';
+            equipeDiv.style.backgroundColor = '#f2f2f2';
+            equipeDiv.style.borderRadius = '5px';
+            equipeDiv.innerHTML = `<strong>${nomsEquipesFuns[index]}:</strong> ${equipe.join(', ')}`;
+            equipesDiv.appendChild(equipeDiv);
+        });
+
+        // Sélection aléatoire de l'équipe perdante
+        const equipePerdante = equipes[Math.floor(Math.random() * equipes.length)];
+
+        // Liste de gages pour l'équipe perdante
+        const gages = [
+            "Faire le tour de la pièce en dansant la danse de la joie",
+            "Inventer une chanson sur le thème de la défaite",
+            "Imiter un animal de la ferme",
+            "Faire une imitation de célébrité",
+            "Inventer une blague et la raconter à haute voix"
+        ];
+
+        // Sélection aléatoire d'un gage
+        const gageAleatoire = gages[Math.floor(Math.random() * gages.length)];
+
+        // Affichage du gage pour l'équipe perdante
+        gageDiv.innerHTML = `<h2 style="color: #ff3366;">Gage pour l'équipe perdante:</h2><p>${gageAleatoire}</p>`;
+
+        // Obtenir des suggestions de jeux en fonction du nombre de joueurs
+        const nombreParticipants = joueurs.length;
+        const suggestions = suggererJeux(nombreParticipants);
+        suggestionsJeuxDiv.innerHTML = `<h2>Suggestions de Jeux:</h2><ul>${suggestions.map(suggestion => `<li>${suggestion}</li>`).join('')}</ul>`;
+
+        // Réinitialisation des scores
+        document.getElementById('scoreEquipe1').value = 0;
+        document.getElementById('scoreEquipe2').value = 0;
+    }
+</script>
 </body>
 </html>

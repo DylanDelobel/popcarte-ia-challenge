@@ -2,9 +2,182 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Répartition des Joueurs</title>
+    <!-- Ajout de Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Ajout de la police Google Font Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FF5F3E;
+            font-family: 'Poppins', sans-serif;
+        }
+        .custom-card {
+            background-color: white;
+            color: black;
+        }
+    </style>
 </head>
 <body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <h1 class="text-center">Team Maker ✨</h1>
 
+                    <!-- Formulaire pour ajouter des joueurs -->
+                    <div class="input-group mt-4" id="player-form">
+                        <input type="text" id="player-name" class="form-control" placeholder="Nom du Joueur">
+                        <button class="btn btn-dark text-white" onclick="addPlayer()">OK</button>
+                    </div>
+
+                    <!-- Tableau pour afficher les joueurs -->
+                    <div class="mt-4" id="player-table">
+                        <h2>Liste des Joueurs 🕹️</h2>
+                        <table class="table table-striped">
+                            <tbody id="player-list">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Bouton de répartition -->
+                    <div class="mt-4" id="repartir-button">
+                        <button class="btn btn-dark text-white" onclick="repartirEquipes()">Répartir</button>
+                        <button class="btn btn-dark text-white" onclick="recommencer()">Recommencer</button>
+                    </div>
+
+                    <!-- Conteneurs pour les équipes (masqués au départ) -->
+                    <div class="mt-4" id="team-container" style="display:none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card custom-card">
+                                    <div class="card-body">
+                                        <h2 class="text-center" id="team1-title"></h2>
+                                        <ul id="team1" class="list-group">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card custom-card">
+                                    <div class="card-body">
+                                        <h2 class="text-center" id="team2-title"></h2>
+                                        <ul id="team2" class="list-group">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ajout de Bootstrap JS (jQuery requis) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Tableau pour stocker les joueurs
+    var players = [];
+
+    // Fonction pour ajouter un joueur à la liste
+    function addPlayer() {
+        var playerName = document.getElementById("player-name").value;
+        if (playerName !== "") {
+            players.push(playerName);
+            document.getElementById("player-name").value = "";
+            updatePlayerList();
+        }
+    }
+
+    // Fonction pour mettre à jour la liste des joueurs
+    function updatePlayerList() {
+        var latestPlayer = players[players.length - 1]; // Récupère le dernier joueur ajouté
+        var playerTable = document.getElementById("player-list");
+        var row = playerTable.insertRow(-1);
+        var cell = row.insertCell(0);
+        cell.innerHTML = latestPlayer;
+    }
+
+    // Fonction pour répartir les joueurs en deux équipes
+    function repartirEquipes() {
+        // Vérifiez qu'il y a au moins deux joueurs
+        if (players.length < 2) {
+            alert("Il faut au moins deux joueurs pour répartir en équipes.");
+            return;
+        }
+
+        // Masquer le formulaire
+        document.getElementById("player-form").style.display = "none";
+
+        // Masquer le bouton de répartition
+        document.getElementById("repartir-button").style.display = "none";
+
+        // Mélangez les joueurs aléatoirement
+        players.sort(function() { return 0.5 - Math.random(); });
+
+        // Divisez les joueurs en deux équipes
+        var middle = Math.ceil(players.length / 2);
+        var team1 = players.slice(0, middle);
+        var team2 = players.slice(middle);
+
+        // Affichez les équipes
+        displayTeams(team1, team2);
+
+        // Afficher les conteneurs des équipes
+        document.getElementById("team-container").style.display = "block";
+    }
+
+    // Fonction pour afficher les équipes
+    function displayTeams(team1, team2) {
+        // Génération de noms d'équipe "Nom + Adjectif"
+        var teamNames = generateTeamNames(team1.length, team2.length);
+
+        // Affichage des noms d'équipe
+        document.getElementById("team1-title").textContent = teamNames[0];
+        document.getElementById("team2-title").textContent = teamNames[1];
+
+        // Affichage des joueurs répartis
+        var team1List = document.getElementById("team1");
+        var team2List = document.getElementById("team2");
+
+        for (var i = 0; i < team1.length; i++) {
+            var listItem = document.createElement("li");
+            listItem.className = "list-group-item";
+            listItem.textContent = team1[i];
+            team1List.appendChild(listItem);
+        }
+
+        for (var j = 0; j < team2.length; j++) {
+            var listItem = document.createElement("li");
+            listItem.className = "list-group-item";
+            listItem.textContent = team2[j];
+            team2List.appendChild(listItem);
+        }
+    }
+
+    // Fonction pour générer des noms d'équipe "Nom + Adjectif"
+    function generateTeamNames(team1Size, team2Size) {
+        var adjectives = ["Marrants", "Intrépides", "Farfelus", "Super", "Imparables"];
+        var nouns = ["Pandas", "Tortues", "Ninjas", "Pirates", "Astronautes"];
+        var randomAdjective1 = adjectives[Math.floor(Math.random() * adjectives.length)];
+        var randomNoun1 = nouns[Math.floor(Math.random() * nouns.length)];
+        var randomAdjective2 = adjectives[Math.floor(Math.random() * adjectives.length)];
+        var randomNoun2 = nouns[Math.floor(Math.random() * nouns.length)];
+        var teamName1 = `Les ${randomNoun1} ${randomAdjective1}`;
+        var teamName2 = `Les ${randomNoun2} ${randomAdjective2}`;
+        return [teamName1, teamName2];
+    }
+
+    // Fonction pour recommencer
+    function recommencer() {
+        location.reload(); // Rafraîchit la page pour recommencer
+    }
+</script>
 </body>
 </html>

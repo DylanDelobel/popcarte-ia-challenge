@@ -1,10 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>GrooveGenius - Organisateur de Concours de Danse</title>
+    <style>
+        /* Styles CSS pour le positionnement et la mise en page */
+        body {
+            font-family: "Arial", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* Couleur de fond */
+        }
+
+        header {
+            background-color: #ff6b6b; /* Couleur d'en-tête vive */
+            color: #fff;
+            text-align: left;
+            padding: 10px 20px;
+        }
+
+        header img {
+            max-height: 30px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .banner {
+            background-image: url('https://i.gifer.com/KWh.gif'); /* Ajoutez votre image de bannière */
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            color: #ffff00;
+            padding: 100px 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff; /* Couleur de fond du contenu */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            border-radius: 8px; /* Coins arrondis */
+        }
+
+        /* Styles CSS pour les boutons */
+        button {
+            background-color: #ff6b6b; /* Couleur de fond du bouton */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px; /* Coins arrondis */
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff4040; /* Couleur de fond du bouton au survol */
+        }
+
+        /* Styles CSS pour les résultats des équipes */
+        .equipe {
+            background-color: #ffb347; /* Couleur de fond de l'équipe */
+            border: 1px solid #ff6b6b;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styles CSS pour les titres */
+        h2 {
+            color: #ff6b6b;
+        }
+
+        /* Styles CSS pour les labels et les inputs */
+        label, input {
+            display: block;
+            margin: 10px 0;
+        }
+
+        /* Styles CSS pour les labels */
+        label {
+            font-weight: bold;
+        }
+
+        /* Styles CSS pour les champs de participants */
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Styles CSS pour les images */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Styles CSS pour le texte principal */
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        /* Styles CSS pour les liens */
+        a {
+            color: #ff6b6b;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ff4040;
+        }
+    </style>
 </head>
 <body>
+<header>
+    <img src="https://assets.stickpng.com/images/580b585b2edbce24c47b28d5.png" alt="Logo GrooveGenius">
+    <span>GrooveGenius</span>
+</header>
 
-</body>
-</html>
+<div class="banner">
+    <h2>Organisateur de Concours de Danse</h2>
+    <p>Révolutionnez votre expérience de concours de danse avec GrooveGenius.</p>
+</div>
+
+<div class="container">
+    <div>
+        <h2>Nombre de Participants et d'Équipes</h2>
+        <label for="nombreParticipants">Nombre de participants :</label>
+        <input type="number" id="nombreParticipants" placeholder="Entrez le nombre de participants">
+        <label for="nombreEquipes">Nombre d'équipes :</label>
+        <input type="number" id="nombreEquipes" placeholder="Entrez le nombre d'équipes">
+        <button onclick="afficherChampsParticipants()">Valider</button>
+    </div>
+
+    <div id="participants" class="hidden">
+        <h2>Noms des Participants</h2>
+        <div id="champsParticipants"></div>
+        <button onclick="creerEquipes()">Créer des équipes</button>
+    </div>
+
+    <div id="equipes" class="hidden">
+        <h2>Équipes Formées :</h2>
+        <div id="equipesFormees"></div>
+    </div>
+</div>
+
+<script>
+    var stylesDanse = ["Rock", "Salsa", "Reggaeton", "Boogie boogie"];
+
+    function getRandomStyle() {
+        var randomIndex = Math.floor(Math.random() * stylesDanse.length);
+        return stylesDanse[randomIndex];
+    }
+
+    function afficherChampsParticipants() {
+        var nombreParticipants = parseInt(document.getElementById("nombreParticipants").value);
+        var champsParticipants = document.getElementById("champs

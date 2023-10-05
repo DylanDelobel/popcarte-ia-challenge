@@ -1,10 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamMaker Pro - Formation d'équipes</title>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+        header, footer {
+            font-family: 'Victoire', sans-serif;
+            background-color: #DCF0DD;
+            text-align: center;
+            padding: 10px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #DCF0DD;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        #equipe-container {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+<header>
+    <h1>ChatGPT TeamMaker Pro</h1>
+</header>
+<div class="container">
+    <h2>Formation d'équipes</h2>
+    <div class="form-group">
+        <label for="noms-participants">Noms des participants (séparés par des virgules)</label>
+        <input type="text" id="noms-participants" placeholder="Entrez les noms des participants">
+    </div>
+    <div class="form-group">
+        <label for="nombre-par-equipe">Nombre de participants par équipe</label>
+        <input type="text" id="nombre-par-equipe" placeholder="Entrez le nombre de participants par équipe">
+    </div>
+    <button id="creer-equipes">Créer des équipes</button>
+    <div id="equipe-container">
+        <!-- Les équipes formées seront affichées ici -->
+    </div>
+</div>
+<footer>
+    <p>&copy; 2023 ChatGPT TeamMaker Pro</p>
+</footer>
+<script>
+    function generateNomAmusant() {
+        const themesDeguisements = [
+            "Les Superhéros",
+            "Les Pirates",
+            "Les Extraterrestres",
+            "Les Sorcières et Sorciers",
+            "Les Animaux de la Ferme",
+            "Les Personnages de Dessins Animés",
+            "Les Célébrités",
+            "Les Robots",
+            "Les Monstres",
+            "Les Athlètes Célèbres"
+        ];
 
+        const themeAleatoire = themesDeguisements[Math.floor(Math.random() * themesDeguisements.length)];
+
+        // Supprimer le chiffre qui suit le nom de l'équipe
+        const nomAleatoire = themeAleatoire.replace(/\d+/g, '') + ` ${Math.floor(Math.random() * 1000)}`;
+
+        return nomAleatoire;
+    }
+
+    document.getElementById("creer-equipes").addEventListener("click", function() {
+        const nomsParticipantsInput = document.getElementById("noms-participants");
+        const nombreParEquipeInput = document.getElementById("nombre-par-equipe");
+        const equipeContainer = document.getElementById("equipe-container");
+
+        // Récupérer les valeurs des champs de saisie
+        const nomsParticipants = nomsParticipantsInput.value.split(",");
+        const nombreParEquipe = parseInt(nombreParEquipeInput.value);
+
+        // Vérifier si les données sont valides
+        if (nomsParticipants.length === 0 || isNaN(nombreParEquipe) || nombreParEquipe <= 0) {
+            alert("Veuillez entrer des données valides.");
+            return;
+        }
+
+        // Mélanger les noms des participants (facultatif)
+        nomsParticipants.sort(() => Math.random() - 0.5);
+
+        // Créer les équipes et générer des noms amusants
+        const equipes = [];
+        for (let i = 0; i < nomsParticipants.length; i += nombreParEquipe) {
+            const equipe = nomsParticipants.slice(i, i + nombreParEquipe);
+            const nomAmusant = generateNomAmusant();
+            equipes.push({ nom: nomAmusant, membres: equipe });
+        }
+
+        // Afficher les équipes formées
+        equipeContainer.innerHTML = "<h3>Équipes formées :</h3>";
+        equipes.forEach((equipe, index) => {
+            equipeContainer.innerHTML += `<p>${equipe.nom}: ${equipe.membres.join(", ")}</p>`;
+        });
+    });
+</script>
 </body>
 </html>
